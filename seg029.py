@@ -1,10 +1,12 @@
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPainter
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QHBoxLayout
 from PyQt5.QtWidgets import QLabel
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtWidgets import QSlider
 from PyQt5.QtWidgets import QVBoxLayout
 from PyQt5.QtWidgets import QWidget
 
@@ -28,16 +30,19 @@ class Seg029(QMainWindow):
     def __init__(self):
         super().__init__()
         self.mediaPaths = glob.glob('media/**/*.jpg', recursive=True)
-        self.pixmaps = [QPixmap(), QPixmap()]
+        self.pixmaps = [None, None]
         self.image = None
         self.initUI()
 
     def initUI(self):
         super().__init__(self)
 
-        self.imgLabel = QLabel('img')
-        self.imgLabel.imageMode = 'png'
+        self.imgLabel = QLabel()
         self.imgLabel.mousePressEvent = self.onImageClicked
+
+        self.slider = QSlider(Qt.Horizontal)
+        self.slider.setMaximum(10)
+        self.slider.valueChanged[int].connect(self.onSliderChanged)
 
         self.minus100Button = QPushButton('-100')
         self.minus5Button = QPushButton('-5')
@@ -51,16 +56,13 @@ class Seg029(QMainWindow):
 
         hbox = QHBoxLayout()
         hbox.addStretch()
-        hbox.addWidget(self.minus100Button)
-        hbox.addWidget(self.minus5Button)
-        hbox.addWidget(self.minus1Button)
-        hbox.addWidget(self.indexLabel)
-        hbox.addWidget(self.plus1Button)
-        hbox.addWidget(self.plus5Button)
-        hbox.addWidget(self.plus100Button)
+        for w in [self.minus100Button, self.minus5Button, self.minus1Button, self.indexLabel, self.plus1Button, self.plus5Button, self.plus100Button]:
+            hbox.addWidget(w)
         hbox.addStretch()
         vbox = QVBoxLayout()
         vbox.addWidget(self.imgLabel)
+        vbox.addStretch()
+        vbox.addWidget(self.slider)
         vbox.addLayout(hbox)
         cw = QWidget()
         cw.setLayout(vbox)
@@ -78,34 +80,34 @@ class Seg029(QMainWindow):
             self.plus1Button.clicked.emit()
         elif key == Qt.Key_B:
             self.minus1Button.clicked.emit()
-        elif key == Qt.Key_C:
-            if self.pixmaps[0].isNull() == False and self.pixmaps[1].isNull() == False:
-                if self.imgLabel.imageMode == 'png':
-                    self.imgLabel.setPixmap(self.pixmaps[0])
-                    self.imgLabel.imageMode = 'jpg'
-                else:
-                    self.imgLabel.setPixmap(self.pixmaps[1])
-                    self.imgLabel.imageMode = 'png'
         else:
             super().keyPressEvent(e)
 
     def loadImage(self):
         mp = self.mediaPaths[int(self.indexLabel.text()) - 1]
         dp = os.path.join(os.path.dirname(mp.replace('media', 'data')), 'PNG', os.path.basename(mp).replace('jpg', 'png'))
-        self.pixmaps[0] = QPixmap(mp)
-        self.pixmaps[1] = QPixmap(dp)
-        if self.pixmaps[1].isNull() or self.pixmaps[1].isNull():
-            self.imgLabel.setPixmap(QPixmap())
+        if os.path.isfile(mp) == False or os.path.isfile(dp) == False:
             self.imgLabel.setText('jpg/png file not found')
+            self.pixmaps = [None, None]
             self.image = None
         else:
-            for i, px in enumerate(self.pixmaps): self.pixmaps[i] = px.scaled(self.IMAGE_WIDTH, self.IMAGE_HEIGHT)
-            self.imgLabel.setPixmap(self.pixmaps[1])
-            self.imgLabel.imageMode = 'png'
+            self.pixmaps[0] = QPixmap(mp).scaled(self.IMAGE_WIDTH, self.IMAGE_HEIGHT)
+            self.pixmaps[1] = QPixmap(dp).scaled(self.IMAGE_WIDTH, self.IMAGE_HEIGHT)
             self.image = self.pixmaps[1].toImage()
-            self.setWindowTitle(dp)
+            self.setWindowTitle(mp)
+            self.paintImage()
+
+    def paintImage(self):
+        p = QPainter()
+        img = self.pixmaps[1].toImage()
+        p.begin(img)
+        p.setOpacity(self.slider.value() / 10)
+        p.drawPixmap(0, 0, self.pixmaps[0])
+        p.end()
+        self.imgLabel.setPixmap(QPixmap.fromImage(img))
 
     def onImageClicked(self, event):
+        print("{},{}".format(event.x(), event.y()))
         if self.image != None:
             color = self.image.pixelColor(event.x(), event.y())
             self.statusBar().showMessage('{} -> {}'.format(color.name(), self.COLOR_DIC.get(color.name(), '?')))
@@ -117,6 +119,10 @@ class Seg029(QMainWindow):
         if 0 < newIdx <= len(self.mediaPaths):
             self.indexLabel.setText('{:03d}'.format(newIdx))
             self.loadImage()
+
+    def onSliderChanged(self, value):
+        if self.image == None: return
+        self.paintImage()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
