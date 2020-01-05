@@ -1,0 +1,68 @@
+{
+    "0": {
+        "fit": "F",
+        "grid": "G",
+        "name": "default",
+        "next": "D",
+        "opacity": "C",
+        "prev": "A",
+        "zoom_in": "Z",
+        "zoom_out": "X",
+        "zoom_reset": "R"
+    },
+    "1": {
+        "fit": "Ctrl+F",
+        "grid": "Ctrl+G",
+        "name": "設定1",
+        "next": "Ctrl+D",
+        "opacity": "Ctrl+C",
+        "prev": "Ctrl+A",
+        "zoom_in": "Ctrl+Z",
+        "zoom_out": "Ctrl+X",
+        "zoom_reset": "Ctrl+R"
+    },
+    "2": {
+        "fit": "F",
+        "grid": "G",
+        "name": "設定2",
+        "next": "D",
+        "opacity": "C",
+        "prev": "A",
+        "zoom_in": "Z",
+        "zoom_out": "X",
+        "zoom_reset": "R"
+    },
+    "3": {
+        "fit": "F",
+        "grid": "G",
+        "name": "設定3",
+        "next": "D",
+        "opacity": "C",
+        "prev": "A",
+        "zoom_in": "Z",
+        "zoom_out": "X",
+        "zoom_reset": "R"
+    },
+    "4": {
+        "fit": "F",
+        "grid": "G",
+        "name": "設定4",
+        "next": "D",
+        "opacity": "C",
+        "prev": "A",
+        "zoom_in": "Z",
+        "zoom_out": "X",
+        "zoom_reset": "R"
+    },
+    "5": {
+        "fit": "F",
+        "grid": "V",
+        "name": "設定5",
+        "next": "D",
+        "opacity": "C",
+        "prev": "A",
+        "zoom_in": "Z",
+        "zoom_out": "X",
+        "zoom_reset": "R"
+    }
+}

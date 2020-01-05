@@ -1,0 +1,33 @@
+{
+    "colors" : {
+        "background"  : "00FF00",
+        "knife"       : "0000FF",
+        "white stick" : "6699CC",
+        "smart phone" : "90D7EC",
+        "umbrella"    : "009DBF",
+        "petbottle"   : "808000",
+        "stick"       : "00FFFF",
+        "other"       : "FFFFFF",
+        "person 1"    : "FF0000",
+        "person 2"    : "FF00FF",
+        "person 3"    : "800080",
+        "person 4"    : "FF8000",
+        "person 5"    : "800000",
+        "person 6"    : "FFFF00",
+        "person 7"    : "808080",
+        "person 8"    : "008080",
+        "person 9"    : "32CD32",
+        "person 10"   : "0C0C0C",
+        "person 11"   : "4B0082",
+        "person 12"   : "008B8B",
+        "person 13"   : "FFE4B5",
+        "person 14"   : "B0C4DE",
+        "person 15"   : "191970",
+        "person 16"   : "7FFFD4",
+        "person 17"   : "D8BFD8",
+        "person 18"   : "F08080"
+    },
+    "media_extension" : ".jpg",
+    "data_extension" : ".png",
+    "media_filepath_to_data_filepath" : ["(.+)[\\\\/](.+)\\.jpg", "{1}/PNG/{2}.png"]
+}
